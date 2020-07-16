@@ -1,0 +1,122 @@
+{
+	"name": "sales_data",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Data_Copy_Link",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Sales_Data.csv",
+				"folderPath": "Input_Files",
+				"container": "source-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Sold to UK",
+				"type": "String"
+			},
+			{
+				"name": "SuperFamily",
+				"type": "String"
+			},
+			{
+				"name": "month1",
+				"type": "String"
+			},
+			{
+				"name": "Year",
+				"type": "String"
+			},
+			{
+				"name": "Sum of Turnover",
+				"type": "String"
+			},
+			{
+				"name": "CURR",
+				"type": "String"
+			},
+			{
+				"name": "group ID",
+				"type": "String"
+			},
+			{
+				"name": "VolSTD_GRP",
+				"type": "String"
+			},
+			{
+				"name": "VolPRO_GRP",
+				"type": "String"
+			},
+			{
+				"name": "Sales Region",
+				"type": "String"
+			},
+			{
+				"name": "Sales Region 2",
+				"type": "String"
+			},
+			{
+				"name": "Buying Group",
+				"type": "String"
+			},
+			{
+				"name": "Customer Group 1",
+				"type": "String"
+			},
+			{
+				"name": "Customer Group 2",
+				"type": "String"
+			},
+			{
+				"name": "Payer TK",
+				"type": "String"
+			},
+			{
+				"name": "Sold To",
+				"type": "String"
+			},
+			{
+				"name": "Customer Name",
+				"type": "String"
+			},
+			{
+				"name": "Cust Curr",
+				"type": "String"
+			},
+			{
+				"name": "rebate type",
+				"type": "String"
+			},
+			{
+				"name": "FCST group",
+				"type": "String"
+			},
+			{
+				"name": "PAYER",
+				"type": "String"
+			},
+			{
+				"name": "Super Family Desc",
+				"type": "String"
+			},
+			{
+				"name": "Hyper Family",
+				"type": "String"
+			},
+			{
+				"name": "Hyper Family Desc",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

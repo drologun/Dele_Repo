@@ -1,0 +1,39 @@
+{
+	"name": "sales_customers_dataflow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sales_data",
+						"type": "DatasetReference"
+					},
+					"name": "salesdata"
+				},
+				{
+					"dataset": {
+						"referenceName": "customer_hirarchy",
+						"type": "DatasetReference"
+					},
+					"name": "customerdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sales_data_output",
+						"type": "DatasetReference"
+					},
+					"name": "consolidateddata"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Join1"
+				}
+			],
+			"script": "source(output(\n\t\t{Sold to UK} as string,\n\t\tSuperFamily as string,\n\t\tmonth1 as string,\n\t\tYear as string,\n\t\t{Sum of Turnover} as string,\n\t\tCURR as string,\n\t\t{group ID} as string,\n\t\tVolSTD_GRP as string,\n\t\tVolPRO_GRP as string,\n\t\t{Sales Region} as string,\n\t\t{Sales Region 2} as string,\n\t\t{Buying Group} as string,\n\t\t{Customer Group 1} as string,\n\t\t{Customer Group 2} as string,\n\t\t{Payer TK} as string,\n\t\t{Sold To} as string,\n\t\t{Customer Name} as string,\n\t\t{Cust Curr} as string,\n\t\t{rebate type} as string,\n\t\t{FCST group} as string,\n\t\tPAYER as string,\n\t\t{Super Family Desc} as string,\n\t\t{Hyper Family} as string,\n\t\t{Hyper Family Desc} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> salesdata\nsource(output(\n\t\t{Sales Region} as string,\n\t\t{Customer Group 1} as string,\n\t\t{Customer Group 2} as string,\n\t\t{Payer TK} as string,\n\t\t{Sold To} as string,\n\t\t{Customer Name} as string,\n\t\t{Cust Curr} as string,\n\t\t{FCST group} as string,\n\t\tPAYER as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> customerdata\nsalesdata, customerdata join(salesdata@{Payer TK} == customerdata@{Payer TK},\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> Join1\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['salesoutput'],\n\ttruncate: true,\n\tmapColumn(\n\t\t{Sold to UK},\n\t\tSuperFamily,\n\t\tmonth1,\n\t\tYear,\n\t\t{Sum of Turnover},\n\t\tCURR,\n\t\t{group ID},\n\t\tVolSTD_GRP,\n\t\tVolPRO_GRP,\n\t\t{Sales Region} = {salesdata@Sales Region},\n\t\t{Sales Region 2},\n\t\t{Buying Group},\n\t\t{Customer Group 1} = {salesdata@Customer Group 1},\n\t\t{Customer Group 2} = {salesdata@Customer Group 2},\n\t\t{Payer TK} = {salesdata@Payer TK},\n\t\t{Sold To} = {salesdata@Sold To},\n\t\t{Customer Name} = {salesdata@Customer Name},\n\t\t{Cust Curr} = {salesdata@Cust Curr},\n\t\t{rebate type},\n\t\t{FCST group} = {salesdata@FCST group},\n\t\tPAYER = {salesdata@PAYER},\n\t\t{Super Family Desc},\n\t\t{Hyper Family},\n\t\t{Hyper Family Desc},\n\t\t{Sales Region} = {customerdata@Sales Region},\n\t\t{Customer Group 1} = {customerdata@Customer Group 1},\n\t\t{Customer Group 2} = {customerdata@Customer Group 2},\n\t\t{Payer TK} = {customerdata@Payer TK},\n\t\t{Sold To} = {customerdata@Sold To},\n\t\t{Customer Name} = {customerdata@Customer Name},\n\t\t{Cust Curr} = {customerdata@Cust Curr},\n\t\t{FCST group} = {customerdata@FCST group},\n\t\tPAYER = {customerdata@PAYER}\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> consolidateddata"
+		}
+	}
+}

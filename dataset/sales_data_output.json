@@ -1,0 +1,23 @@
+{
+	"name": "sales_data_output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Dele_DF_Blob",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "output2",
+				"container": "source-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

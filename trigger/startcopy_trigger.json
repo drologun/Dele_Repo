@@ -1,0 +1,25 @@
+{
+	"name": "startcopy_trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline1",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Hour",
+				"interval": 1,
+				"startTime": "2020-07-15T14:50:00Z",
+				"endTime": "2020-07-16T15:45:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

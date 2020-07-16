@@ -1,0 +1,62 @@
+{
+	"name": "customer_hirarchy",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Data_Copy_Link",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "CUSTOMER HIERARCHY.csv",
+				"folderPath": "Input_Files",
+				"container": "source-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Sales Region",
+				"type": "String"
+			},
+			{
+				"name": "Customer Group 1",
+				"type": "String"
+			},
+			{
+				"name": "Customer Group 2",
+				"type": "String"
+			},
+			{
+				"name": "Payer TK",
+				"type": "String"
+			},
+			{
+				"name": "Sold To",
+				"type": "String"
+			},
+			{
+				"name": "Customer Name",
+				"type": "String"
+			},
+			{
+				"name": "Cust Curr",
+				"type": "String"
+			},
+			{
+				"name": "FCST group",
+				"type": "String"
+			},
+			{
+				"name": "PAYER",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

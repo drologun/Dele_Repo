@@ -1,0 +1,17 @@
+{
+	"name": "DeleDFIR",
+	"properties": {
+		"type": "Managed",
+		"description": "IR for sales data",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "West Europe",
+				"dataFlowProperties": {
+					"computeType": "General",
+					"coreCount": 8,
+					"timeToLive": 0
+				}
+			}
+		}
+	}
+}
