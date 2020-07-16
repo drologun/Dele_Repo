@@ -1,0 +1,105 @@
+{
+	"name": "Ayomide_Dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Data_Copy_Link",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "Sales_Data.csv",
+				"folderPath": "Input_Files",
+				"container": "source-files"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Sold to UK",
+				"type": "String"
+			},
+			{
+				"name": "SuperFamily",
+				"type": "String"
+			},
+			{
+				"name": "month1",
+				"type": "String"
+			},
+			{
+				"name": "Year",
+				"type": "String"
+			},
+			{
+				"name": "Turnover",
+				"type": "String"
+			},
+			{
+				"name": "CURR",
+				"type": "String"
+			},
+			{
+				"name": "group ID",
+				"type": "String"
+			},
+			{
+				"name": "Sales_Region",
+				"type": "String"
+			},
+			{
+				"name": "SalesRegion2",
+				"type": "String"
+			},
+			{
+				"name": "Buying Group",
+				"type": "String"
+			},
+			{
+				"name": "Customer_Grp",
+				"type": "String"
+			},
+			{
+				"name": "PayerTK",
+				"type": "String"
+			},
+			{
+				"name": "SoldTo",
+				"type": "String"
+			},
+			{
+				"name": "Customer_Name",
+				"type": "String"
+			},
+			{
+				"name": "CustCurr",
+				"type": "String"
+			},
+			{
+				"name": "rebate type",
+				"type": "String"
+			},
+			{
+				"name": "FCST group",
+				"type": "String"
+			},
+			{
+				"name": "PAYER",
+				"type": "String"
+			},
+			{
+				"name": "HyperFamily",
+				"type": "String"
+			},
+			{
+				"name": "FamilyDesc",
+				"type": "String"
+			}
+		]
+	}
+}
