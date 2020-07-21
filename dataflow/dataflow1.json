@@ -1,0 +1,16 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "welldatafromonprem"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false) ~> welldatafromonprem"
+		}
+	}
+}
