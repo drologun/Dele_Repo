@@ -160,7 +160,7 @@
 			},
 			"Employee_Folder": {
 				"type": "string",
-				"defaultValue": "employees_data"
+				"defaultValue": "employee_data"
 			}
 		},
 		"annotations": []
