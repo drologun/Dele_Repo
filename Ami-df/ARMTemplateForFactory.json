@@ -578,7 +578,7 @@
 					},
 					"Employee_Folder": {
 						"type": "string",
-						"defaultValue": "employee_data"
+						"defaultValue": "Employee_Data"
 					}
 				},
 				"annotations": []
