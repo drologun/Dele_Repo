@@ -1,0 +1,20 @@
+{
+	"name": "AzureDataLakeStore_Ami_Gen1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataLakeStore",
+		"typeProperties": {
+			"dataLakeStoreUri": "https://amidbstore.azuredatalakestore.net/webhdfs/v1",
+			"servicePrincipalId": "7c61b27f-4727-4432-8e83-b81c8b460a66",
+			"tenant": "4ba5c989-6a6b-45fa-8b8d-dcc141db69e5",
+			"subscriptionId": "5f9f65f9-0dc4-4e69-bc28-1abfff108e02",
+			"resourceGroupName": "Ami_Group",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiIwNzY5ZDMzMy03NDc0LTQ2MmQtYTU5Yy1mODJlMjhjNmZkMjUiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-ami",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

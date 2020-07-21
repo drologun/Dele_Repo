@@ -1,0 +1,13 @@
+{
+	"name": "AMI_DWH_Output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AMI_DWH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

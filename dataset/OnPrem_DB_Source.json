@@ -1,0 +1,128 @@
+{
+	"name": "OnPrem_DB_Source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Ami_OnPrem_DB_Copy",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Borehole_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "UWI",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Short_name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Country_code",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Owner",
+				"type": "varchar"
+			},
+			{
+				"name": "Quad",
+				"type": "char"
+			},
+			{
+				"name": "Block",
+				"type": "varchar"
+			},
+			{
+				"name": "Original_longitude",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Original_latitude",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Original_crs",
+				"type": "varchar"
+			},
+			{
+				"name": "Original_crs_name",
+				"type": "varchar"
+			},
+			{
+				"name": "Field_name",
+				"type": "varchar"
+			},
+			{
+				"name": "Water_depth",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Slot",
+				"type": "varchar"
+			},
+			{
+				"name": "Well_class_int",
+				"type": "varchar"
+			},
+			{
+				"name": "Product",
+				"type": "varchar"
+			},
+			{
+				"name": "Well_drill_type",
+				"type": "varchar"
+			},
+			{
+				"name": "Deviation_type",
+				"type": "varchar"
+			},
+			{
+				"name": "Reference_point",
+				"type": "char"
+			},
+			{
+				"name": "Reference_elevation",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Measured_Depth_m",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Vertical_Depth_m",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "Status",
+				"type": "varchar"
+			},
+			{
+				"name": "Spud_date",
+				"type": "date"
+			},
+			{
+				"name": "Completion_date",
+				"type": "date"
+			},
+			{
+				"name": "Source",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Titanic_Test"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

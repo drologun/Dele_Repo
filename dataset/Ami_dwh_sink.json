@@ -1,0 +1,17 @@
+{
+	"name": "Ami_dwh_sink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AMI_DWH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "well_data",
+			"table": "welldb"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

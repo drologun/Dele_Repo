@@ -1,0 +1,16 @@
+{
+	"name": "AMI_DWH",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=ami-server.database.windows.net;initial catalog=AMI_DB;user id=ami_admin",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJmNzY1MDQ4OC04YTdkLTQ4MWEtYWEwOC1kYTU1NTIxOWQzNDQiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-ami",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

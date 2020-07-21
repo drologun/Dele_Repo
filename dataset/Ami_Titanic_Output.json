@@ -1,0 +1,17 @@
+{
+	"name": "Ami_Titanic_Output",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AMI_DWH",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "titanic"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

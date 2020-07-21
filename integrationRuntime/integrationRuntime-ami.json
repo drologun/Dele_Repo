@@ -1,0 +1,12 @@
+{
+	"name": "integrationRuntime-ami",
+	"properties": {
+		"type": "SelfHosted",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/5f9f65f9-0dc4-4e69-bc28-1abfff108e02/resourcegroups/Learnit_Group/providers/Microsoft.DataFactory/factories/learnit-df/integrationruntimes/integrationRuntime-learnit",
+				"authorizationType": "Rbac"
+			}
+		}
+	}
+}

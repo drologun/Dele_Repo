@@ -1,0 +1,155 @@
+{
+	"name": "Ami_Copy_Titanic",
+	"properties": {
+		"activities": [
+			{
+				"name": "Ami_Copy_Titanic",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "P_PassengerId",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Passenger_ID"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Passenger_Name"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Pclass",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Passenger_Class"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Sex",
+									"type": "String",
+									"physicalType": "nchar"
+								},
+								"sink": {
+									"name": "Passenger_Sex"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Age",
+									"type": "Decimal",
+									"physicalType": "decimal"
+								},
+								"sink": {
+									"name": "Age"
+								}
+							},
+							{
+								"source": {
+									"name": "P_SibSp",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "Sibsp"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Ticket",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Ticket"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Fare",
+									"type": "Decimal",
+									"physicalType": "decimal"
+								},
+								"sink": {
+									"name": "Fare"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Cabin",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Carbin"
+								}
+							},
+							{
+								"source": {
+									"name": "P_Embarked",
+									"type": "String",
+									"physicalType": "nchar"
+								},
+								"sink": {
+									"name": "Embarked"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "OnPrem_DB_Source",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Ami_Titanic_Output",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
