@@ -1,0 +1,1637 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Ami-df"
+		},
+		"AMI_DWH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AMI_DWH'"
+		},
+		"Ami_OnPrem_DB_Copy_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Ami_OnPrem_DB_Copy'"
+		},
+		"AzureDataLakeStore_Ami_Gen1_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'AzureDataLakeStore_Ami_Gen1'"
+		},
+		"Data_Copy_Link_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Data_Copy_Link'"
+		},
+		"Dele_DF_Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Dele_DF_Blob'"
+		},
+		"Dele_DF_IR_Selfhosted_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Dele_DF_IR_Selfhosted'"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_dataLakeStoreUri": {
+			"type": "string",
+			"defaultValue": "https://amidbstore.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "7c61b27f-4727-4432-8e83-b81c8b460a66"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "4ba5c989-6a6b-45fa-8b8d-dcc141db69e5"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "5f9f65f9-0dc4-4e69-bc28-1abfff108e02"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "Ami_Group"
+		},
+		"integrationRuntime-ami_properties_typeProperties_linkedInfo_resourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/5f9f65f9-0dc4-4e69-bc28-1abfff108e02/resourcegroups/Learnit_Group/providers/Microsoft.DataFactory/factories/learnit-df/integrationruntimes/integrationRuntime-learnit"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Ami-Welldata-Copy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_bbl",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "dbo.UK_New_Wells"
+							},
+							{
+								"name": "Destination",
+								"value": "datafile/welldb.txt"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureDataLakeStoreWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_bbl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_bbl",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_bbl')]",
+				"[concat(variables('factoryId'), '/datasets/DestinationDataset_bbl')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ami_Copy_Titanic')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Ami_Copy_Titanic",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "P_PassengerId",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Passenger_ID"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Passenger_Name"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Pclass",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Passenger_Class"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Sex",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "Passenger_Sex"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Age",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Age"
+										}
+									},
+									{
+										"source": {
+											"name": "P_SibSp",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "Sibsp"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Ticket",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Ticket"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Fare",
+											"type": "Decimal",
+											"physicalType": "decimal"
+										},
+										"sink": {
+											"name": "Fare"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Cabin",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Carbin"
+										}
+									},
+									{
+										"source": {
+											"name": "P_Embarked",
+											"type": "String",
+											"physicalType": "nchar"
+										},
+										"sink": {
+											"name": "Embarked"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "OnPrem_DB_Source",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Ami_Titanic_Output",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/OnPrem_DB_Source')]",
+				"[concat(variables('factoryId'), '/datasets/Ami_Titanic_Output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Copy_OnPrem-DB-DWH')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_Well_Data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "UWI",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "UWI"
+										}
+									},
+									{
+										"source": {
+											"name": "Short_name",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Short_name"
+										}
+									},
+									{
+										"source": {
+											"name": "Product",
+											"type": "String",
+											"physicalType": "varchar"
+										},
+										"sink": {
+											"name": "Product"
+										}
+									},
+									{
+										"source": {
+											"name": "Water_depth",
+											"type": "Single",
+											"physicalType": "real"
+										},
+										"sink": {
+											"name": "Water_dept"
+										}
+									},
+									{
+										"source": {
+											"name": "Spud_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Spud_date"
+										}
+									},
+									{
+										"source": {
+											"name": "Completion_date",
+											"type": "DateTime",
+											"physicalType": "date"
+										},
+										"sink": {
+											"name": "Completion_date"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "OnPrem_DB_Source",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Ami_dwh_sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/OnPrem_DB_Source')]",
+				"[concat(variables('factoryId'), '/datasets/Ami_dwh_sink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Folder_Copy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@bool(pipeline().parameters.Copy_to_Well_Folder)",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "Copy_Employee_data",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureDataLakeStoreReadSettings",
+												"recursive": true,
+												"wildcardFileName": "*",
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureDataLakeStoreWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Source_File_Folder",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Output_Folder",
+											"type": "DatasetReference",
+											"parameters": {
+												"Output_Folder": {
+													"value": "@pipeline().parameters.Employee_Folder",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Copy_Well_Data",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureDataLakeStoreReadSettings",
+												"recursive": true,
+												"wildcardFileName": "*",
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureDataLakeStoreWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "Source_File_Folder",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "Output_Folder",
+											"type": "DatasetReference",
+											"parameters": {
+												"Output_Folder": {
+													"value": "@pipeline().parameters.Well_Folder",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"Copy_to_Well_Folder": {
+						"type": "string",
+						"defaultValue": "true"
+					},
+					"Well_Folder": {
+						"type": "string",
+						"defaultValue": "well_data"
+					},
+					"Employee_Folder": {
+						"type": "string",
+						"defaultValue": "employees_data"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Source_File_Folder')]",
+				"[concat(variables('factoryId'), '/datasets/Output_Folder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "copy_sales_data",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "sales_data",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "sales_data_output",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sales_data')]",
+				"[concat(variables('factoryId'), '/datasets/sales_data_output')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AMI_DWH_Output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AMI_DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AMI_DWH')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ami_Titanic_Output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AMI_DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "titanic"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AMI_DWH')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ami_dwh_sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AMI_DWH",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "well_data",
+					"table": "welldb"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AMI_DWH')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ayomide_Dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Data_Copy_Link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Sales_Data.csv",
+						"folderPath": "Input_Files",
+						"container": "source-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Sold to UK",
+						"type": "String"
+					},
+					{
+						"name": "SuperFamily",
+						"type": "String"
+					},
+					{
+						"name": "month1",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Turnover",
+						"type": "String"
+					},
+					{
+						"name": "CURR",
+						"type": "String"
+					},
+					{
+						"name": "group ID",
+						"type": "String"
+					},
+					{
+						"name": "Sales_Region",
+						"type": "String"
+					},
+					{
+						"name": "SalesRegion2",
+						"type": "String"
+					},
+					{
+						"name": "Buying Group",
+						"type": "String"
+					},
+					{
+						"name": "Customer_Grp",
+						"type": "String"
+					},
+					{
+						"name": "PayerTK",
+						"type": "String"
+					},
+					{
+						"name": "SoldTo",
+						"type": "String"
+					},
+					{
+						"name": "Customer_Name",
+						"type": "String"
+					},
+					{
+						"name": "CustCurr",
+						"type": "String"
+					},
+					{
+						"name": "rebate type",
+						"type": "String"
+					},
+					{
+						"name": "FCST group",
+						"type": "String"
+					},
+					{
+						"name": "PAYER",
+						"type": "String"
+					},
+					{
+						"name": "HyperFamily",
+						"type": "String"
+					},
+					{
+						"name": "FamilyDesc",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Data_Copy_Link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DestinationDataset_bbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStore_Ami_Gen1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureDataLakeStoreLocation",
+						"fileName": "welldb.txt",
+						"folderPath": "datafile"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStore_Ami_Gen1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnPrem_DB_Source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Ami_OnPrem_DB_Copy",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Borehole_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UWI",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Short_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Owner",
+						"type": "varchar"
+					},
+					{
+						"name": "Quad",
+						"type": "char"
+					},
+					{
+						"name": "Block",
+						"type": "varchar"
+					},
+					{
+						"name": "Original_longitude",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Original_latitude",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Original_crs",
+						"type": "varchar"
+					},
+					{
+						"name": "Original_crs_name",
+						"type": "varchar"
+					},
+					{
+						"name": "Field_name",
+						"type": "varchar"
+					},
+					{
+						"name": "Water_depth",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Slot",
+						"type": "varchar"
+					},
+					{
+						"name": "Well_class_int",
+						"type": "varchar"
+					},
+					{
+						"name": "Product",
+						"type": "varchar"
+					},
+					{
+						"name": "Well_drill_type",
+						"type": "varchar"
+					},
+					{
+						"name": "Deviation_type",
+						"type": "varchar"
+					},
+					{
+						"name": "Reference_point",
+						"type": "char"
+					},
+					{
+						"name": "Reference_elevation",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Measured_Depth_m",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Vertical_Depth_m",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Status",
+						"type": "varchar"
+					},
+					{
+						"name": "Spud_date",
+						"type": "date"
+					},
+					{
+						"name": "Completion_date",
+						"type": "date"
+					},
+					{
+						"name": "Source",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Titanic_Test"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Ami_OnPrem_DB_Copy')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Output_Folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStore_Ami_Gen1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Output_Folder": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureDataLakeStoreLocation",
+						"folderPath": {
+							"value": "@dataset().Output_Folder",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStore_Ami_Gen1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_bbl')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Ami_OnPrem_DB_Copy",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "Borehole_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "UWI",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Short_name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Country_code",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Owner",
+						"type": "varchar"
+					},
+					{
+						"name": "Quad",
+						"type": "char"
+					},
+					{
+						"name": "Block",
+						"type": "varchar"
+					},
+					{
+						"name": "Original_longitude",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Original_latitude",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Original_crs",
+						"type": "varchar"
+					},
+					{
+						"name": "Original_crs_name",
+						"type": "varchar"
+					},
+					{
+						"name": "Field_name",
+						"type": "varchar"
+					},
+					{
+						"name": "Water_depth",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Slot",
+						"type": "varchar"
+					},
+					{
+						"name": "Well_class_int",
+						"type": "varchar"
+					},
+					{
+						"name": "Product",
+						"type": "varchar"
+					},
+					{
+						"name": "Well_drill_type",
+						"type": "varchar"
+					},
+					{
+						"name": "Deviation_type",
+						"type": "varchar"
+					},
+					{
+						"name": "Reference_point",
+						"type": "char"
+					},
+					{
+						"name": "Reference_elevation",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Measured_Depth_m",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Vertical_Depth_m",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "Status",
+						"type": "varchar"
+					},
+					{
+						"name": "Spud_date",
+						"type": "date"
+					},
+					{
+						"name": "Completion_date",
+						"type": "date"
+					},
+					{
+						"name": "Source",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "UK_New_Wells"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Ami_OnPrem_DB_Copy')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Source_File_Folder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStore_Ami_Gen1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureDataLakeStoreLocation",
+						"folderPath": "datafile"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStore_Ami_Gen1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/customer_hirarchy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Data_Copy_Link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "CUSTOMER HIERARCHY.csv",
+						"folderPath": "Input_Files",
+						"container": "source-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Sales Region",
+						"type": "String"
+					},
+					{
+						"name": "Customer Group 1",
+						"type": "String"
+					},
+					{
+						"name": "Customer Group 2",
+						"type": "String"
+					},
+					{
+						"name": "Payer TK",
+						"type": "String"
+					},
+					{
+						"name": "Sold To",
+						"type": "String"
+					},
+					{
+						"name": "Customer Name",
+						"type": "String"
+					},
+					{
+						"name": "Cust Curr",
+						"type": "String"
+					},
+					{
+						"name": "FCST group",
+						"type": "String"
+					},
+					{
+						"name": "PAYER",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Data_Copy_Link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_data')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Data_Copy_Link",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Sales_Data.csv",
+						"folderPath": "Input_Files",
+						"container": "source-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Sold to UK",
+						"type": "String"
+					},
+					{
+						"name": "SuperFamily",
+						"type": "String"
+					},
+					{
+						"name": "month1",
+						"type": "String"
+					},
+					{
+						"name": "Year",
+						"type": "String"
+					},
+					{
+						"name": "Sum of Turnover",
+						"type": "String"
+					},
+					{
+						"name": "CURR",
+						"type": "String"
+					},
+					{
+						"name": "group ID",
+						"type": "String"
+					},
+					{
+						"name": "VolSTD_GRP",
+						"type": "String"
+					},
+					{
+						"name": "VolPRO_GRP",
+						"type": "String"
+					},
+					{
+						"name": "Sales Region",
+						"type": "String"
+					},
+					{
+						"name": "Sales Region 2",
+						"type": "String"
+					},
+					{
+						"name": "Buying Group",
+						"type": "String"
+					},
+					{
+						"name": "Customer Group 1",
+						"type": "String"
+					},
+					{
+						"name": "Customer Group 2",
+						"type": "String"
+					},
+					{
+						"name": "Payer TK",
+						"type": "String"
+					},
+					{
+						"name": "Sold To",
+						"type": "String"
+					},
+					{
+						"name": "Customer Name",
+						"type": "String"
+					},
+					{
+						"name": "Cust Curr",
+						"type": "String"
+					},
+					{
+						"name": "rebate type",
+						"type": "String"
+					},
+					{
+						"name": "FCST group",
+						"type": "String"
+					},
+					{
+						"name": "PAYER",
+						"type": "String"
+					},
+					{
+						"name": "Super Family Desc",
+						"type": "String"
+					},
+					{
+						"name": "Hyper Family",
+						"type": "String"
+					},
+					{
+						"name": "Hyper Family Desc",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Data_Copy_Link')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_data_output')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Dele_DF_Blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "output2",
+						"container": "source-files"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Dele_DF_Blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AMI_DWH')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('AMI_DWH_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-ami",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-ami')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Ami_OnPrem_DB_Copy')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('Ami_OnPrem_DB_Copy_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-ami",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-ami')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStore_Ami_Gen1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDataLakeStore",
+				"typeProperties": {
+					"dataLakeStoreUri": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_dataLakeStoreUri')]",
+					"servicePrincipalId": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_servicePrincipalId')]",
+					"servicePrincipalKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_servicePrincipalKey')]"
+					},
+					"tenant": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_tenant')]",
+					"subscriptionId": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_subscriptionId')]",
+					"resourceGroupName": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_resourceGroupName')]"
+				},
+				"connectVia": {
+					"referenceName": "integrationRuntime-ami",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/integrationRuntime-ami')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Data_Copy_Link')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('Data_Copy_Link_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dele_DF_Blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('Dele_DF_Blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Dele_DF_IR_Selfhosted')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('Dele_DF_IR_Selfhosted_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "DeleDF-Selfhosted-IR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/DeleDF-Selfhosted-IR')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/startcopy_trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline1",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 1,
+						"startTime": "2020-07-15T14:50:00Z",
+						"endTime": "2020-07-16T15:45:00Z",
+						"timeZone": "UTC"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleDF-Selfhosted-IR')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DeleDFIR')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"description": "IR for sales data",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "West Europe",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/integrationRuntime-ami')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {
+					"linkedInfo": {
+						"resourceId": "[parameters('integrationRuntime-ami_properties_typeProperties_linkedInfo_resourceId')]",
+						"authorizationType": "Rbac"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/sales_customers_dataflow')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "sales_data",
+								"type": "DatasetReference"
+							},
+							"name": "salesdata"
+						},
+						{
+							"dataset": {
+								"referenceName": "customer_hirarchy",
+								"type": "DatasetReference"
+							},
+							"name": "customerdata"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "sales_data_output",
+								"type": "DatasetReference"
+							},
+							"name": "consolidateddata"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Join1"
+						}
+					],
+					"script": "source(output(\n\t\t{Sold to UK} as string,\n\t\tSuperFamily as string,\n\t\tmonth1 as string,\n\t\tYear as string,\n\t\t{Sum of Turnover} as string,\n\t\tCURR as string,\n\t\t{group ID} as string,\n\t\tVolSTD_GRP as string,\n\t\tVolPRO_GRP as string,\n\t\t{Sales Region} as string,\n\t\t{Sales Region 2} as string,\n\t\t{Buying Group} as string,\n\t\t{Customer Group 1} as string,\n\t\t{Customer Group 2} as string,\n\t\t{Payer TK} as string,\n\t\t{Sold To} as string,\n\t\t{Customer Name} as string,\n\t\t{Cust Curr} as string,\n\t\t{rebate type} as string,\n\t\t{FCST group} as string,\n\t\tPAYER as string,\n\t\t{Super Family Desc} as string,\n\t\t{Hyper Family} as string,\n\t\t{Hyper Family Desc} as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> salesdata\nsource(output(\n\t\t{Sales Region} as string,\n\t\t{Customer Group 1} as string,\n\t\t{Customer Group 2} as string,\n\t\t{Payer TK} as string,\n\t\t{Sold To} as string,\n\t\t{Customer Name} as string,\n\t\t{Cust Curr} as string,\n\t\t{FCST group} as string,\n\t\tPAYER as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false) ~> customerdata\nsalesdata, customerdata join(salesdata@{Payer TK} == customerdata@{Payer TK},\n\tjoinType:'outer',\n\tbroadcast: 'auto')~> Join1\nJoin1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['salesoutput'],\n\ttruncate: true,\n\tmapColumn(\n\t\t{Sold to UK},\n\t\tSuperFamily,\n\t\tmonth1,\n\t\tYear,\n\t\t{Sum of Turnover},\n\t\tCURR,\n\t\t{group ID},\n\t\tVolSTD_GRP,\n\t\tVolPRO_GRP,\n\t\t{Sales Region} = salesdata@{Sales Region},\n\t\t{Sales Region 2},\n\t\t{Buying Group},\n\t\t{Customer Group 1} = salesdata@{Customer Group 1},\n\t\t{Customer Group 2} = salesdata@{Customer Group 2},\n\t\t{Payer TK} = salesdata@{Payer TK},\n\t\t{Sold To} = salesdata@{Sold To},\n\t\t{Customer Name} = salesdata@{Customer Name},\n\t\t{Cust Curr} = salesdata@{Cust Curr},\n\t\t{rebate type},\n\t\t{FCST group} = salesdata@{FCST group},\n\t\tPAYER = salesdata@PAYER,\n\t\t{Super Family Desc},\n\t\t{Hyper Family},\n\t\t{Hyper Family Desc},\n\t\t{Sales Region} = customerdata@{Sales Region},\n\t\t{Customer Group 1} = customerdata@{Customer Group 1},\n\t\t{Customer Group 2} = customerdata@{Customer Group 2},\n\t\t{Payer TK} = customerdata@{Payer TK},\n\t\t{Sold To} = customerdata@{Sold To},\n\t\t{Customer Name} = customerdata@{Customer Name},\n\t\t{Cust Curr} = customerdata@{Cust Curr},\n\t\t{FCST group} = customerdata@{FCST group},\n\t\tPAYER = customerdata@PAYER\n\t),\n\tpartitionBy('hash', 1),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> consolidateddata"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/sales_data')]",
+				"[concat(variables('factoryId'), '/datasets/customer_hirarchy')]",
+				"[concat(variables('factoryId'), '/datasets/sales_data_output')]"
+			]
+		}
+	]
+}

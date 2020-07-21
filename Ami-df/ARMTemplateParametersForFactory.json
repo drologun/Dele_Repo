@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "Ami-df"
+		},
+		"AMI_DWH_connectionString": {
+			"value": ""
+		},
+		"Ami_OnPrem_DB_Copy_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStore_Ami_Gen1_servicePrincipalKey": {
+			"value": ""
+		},
+		"Data_Copy_Link_connectionString": {
+			"value": ""
+		},
+		"Dele_DF_Blob_connectionString": {
+			"value": ""
+		},
+		"Dele_DF_IR_Selfhosted_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_dataLakeStoreUri": {
+			"value": "https://amidbstore.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_servicePrincipalId": {
+			"value": "7c61b27f-4727-4432-8e83-b81c8b460a66"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_tenant": {
+			"value": "4ba5c989-6a6b-45fa-8b8d-dcc141db69e5"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_subscriptionId": {
+			"value": "5f9f65f9-0dc4-4e69-bc28-1abfff108e02"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_resourceGroupName": {
+			"value": "Ami_Group"
+		},
+		"integrationRuntime-ami_properties_typeProperties_linkedInfo_resourceId": {
+			"value": "/subscriptions/5f9f65f9-0dc4-4e69-bc28-1abfff108e02/resourcegroups/Learnit_Group/providers/Microsoft.DataFactory/factories/learnit-df/integrationruntimes/integrationRuntime-learnit"
+		}
+	}
+}

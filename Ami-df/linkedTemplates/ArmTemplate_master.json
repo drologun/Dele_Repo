@@ -1,0 +1,146 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Ami-df"
+		},
+		"AMI_DWH_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AMI_DWH'"
+		},
+		"Ami_OnPrem_DB_Copy_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Ami_OnPrem_DB_Copy'"
+		},
+		"AzureDataLakeStore_Ami_Gen1_servicePrincipalKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'servicePrincipalKey' of 'AzureDataLakeStore_Ami_Gen1'"
+		},
+		"Data_Copy_Link_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Data_Copy_Link'"
+		},
+		"Dele_DF_Blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Dele_DF_Blob'"
+		},
+		"Dele_DF_IR_Selfhosted_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'Dele_DF_IR_Selfhosted'"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_dataLakeStoreUri": {
+			"type": "string",
+			"defaultValue": "https://amidbstore.azuredatalakestore.net/webhdfs/v1"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_servicePrincipalId": {
+			"type": "string",
+			"defaultValue": "7c61b27f-4727-4432-8e83-b81c8b460a66"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_tenant": {
+			"type": "string",
+			"defaultValue": "4ba5c989-6a6b-45fa-8b8d-dcc141db69e5"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "5f9f65f9-0dc4-4e69-bc28-1abfff108e02"
+		},
+		"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_resourceGroupName": {
+			"type": "string",
+			"defaultValue": "Ami_Group"
+		},
+		"integrationRuntime-ami_properties_typeProperties_linkedInfo_resourceId": {
+			"type": "string",
+			"defaultValue": "/subscriptions/5f9f65f9-0dc4-4e69-bc28-1abfff108e02/resourcegroups/Learnit_Group/providers/Microsoft.DataFactory/factories/learnit-df/integrationruntimes/integrationRuntime-learnit"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Data_Copy_Link_connectionString": {
+						"value": "[parameters('Data_Copy_Link_connectionString')]"
+					},
+					"Dele_DF_Blob_connectionString": {
+						"value": "[parameters('Dele_DF_Blob_connectionString')]"
+					},
+					"AMI_DWH_connectionString": {
+						"value": "[parameters('AMI_DWH_connectionString')]"
+					},
+					"Ami_OnPrem_DB_Copy_connectionString": {
+						"value": "[parameters('Ami_OnPrem_DB_Copy_connectionString')]"
+					},
+					"AzureDataLakeStore_Ami_Gen1_servicePrincipalKey": {
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_servicePrincipalKey')]"
+					},
+					"Dele_DF_IR_Selfhosted_connectionString": {
+						"value": "[parameters('Dele_DF_IR_Selfhosted_connectionString')]"
+					},
+					"integrationRuntime-ami_properties_typeProperties_linkedInfo_resourceId": {
+						"value": "[parameters('integrationRuntime-ami_properties_typeProperties_linkedInfo_resourceId')]"
+					},
+					"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_dataLakeStoreUri": {
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_dataLakeStoreUri')]"
+					},
+					"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_servicePrincipalId": {
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_servicePrincipalId')]"
+					},
+					"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_tenant": {
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_tenant')]"
+					},
+					"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_subscriptionId": {
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_subscriptionId')]"
+					},
+					"AzureDataLakeStore_Ami_Gen1_properties_typeProperties_resourceGroupName": {
+						"value": "[parameters('AzureDataLakeStore_Ami_Gen1_properties_typeProperties_resourceGroupName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ArmTemplate_0')]"
+			]
+		}
+	]
+}
