@@ -1,0 +1,29 @@
+{
+	"name": "Output_Folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStore_Ami_Gen1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Output_Folder": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"folderPath": {
+					"value": "@dataset().Output_Folder",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

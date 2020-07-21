@@ -1,0 +1,21 @@
+{
+	"name": "Source_File_Folder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStore_Ami_Gen1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"folderPath": "datafile"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
